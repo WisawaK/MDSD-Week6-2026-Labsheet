@@ -585,6 +585,8 @@ Future<Weather> fetchWeatherWithDio(String city) async {
 ```text
 บันทึกรูปที่นี่
 ```
+<img width="497" height="107" alt="image" src="https://github.com/user-attachments/assets/f82aaf6d-5cf0-468b-bde8-dc9502f40695" />
+
 ### ขั้นตอนที่ 5.4 — 🧠 คิดเอง/ออกแบบเอง
 
 `DioException` มีหลายชนิด (`DioExceptionType`) แต่โค้ดในขั้นตอนที่ 5.2 จัดการเฉพาะ `connectionTimeout` ด้านล่างเป็นตัวอย่างการเพิ่มเงื่อนไขให้อีก 1 ชนิด (`badResponse`) ให้ดูเป็นแนวทาง จากนั้นให้เพิ่มเงื่อนไข `else if` อีกอย่างน้อย 1 ชนิดด้วยตัวเอง โดยเลือกจาก `DioExceptionType.receiveTimeout` หรือ `DioExceptionType.connectionError` (ห้ามซ้ำกับ `badResponse` ที่ให้เป็นตัวอย่างแล้ว) พร้อมข้อความแจ้งเตือนภาษาไทยที่เหมาะสมกับสาเหตุนั้นโดยเฉพาะ (ค้นคว้าความหมายของแต่ละชนิดได้จากเอกสารของแพ็กเกจ `dio` บน pub.dev)
@@ -606,13 +608,24 @@ Future<Weather> fetchWeatherWithDio(String city) async {
 > ✅ **Checkpoint 5.2** เปรียบเทียบสั้น ๆ ระหว่าง `http` กับ `dio` อย่างน้อย 3 ประเด็น โดยอ้างอิงจากสิ่งที่สังเกตได้จริงตอนทดลองในขั้นตอนที่ 5.3 เช่น การแปลง JSON อัตโนมัติ, การกำหนด Query Parameters, และรูปแบบการจัดการ Exception (`DioException` เทียบกับการดักจับหลายชนิดแยกกันแบบ `http`)
 
 ```text
-บันทึกคำตอบที่นี่
+1.การแปลงข้อมูล JSON: แพ็กเกจ http ต้องเรียกใช้งาน jsonDecode(response.body) เพื่อแปลงข้อความ JSON เป็น Map ด้วยตัวเอง ในขณะที่ dio ทำการแปลงข้อมูล JSON เป็น Map ให้อัตโนมัติผ่าน response.data ช่วยลดขั้นตอนการแปลงข้อมูล png  2.การส่ง Query Parameters: http ต้องต่อ String URL เองหรือใช้ Uri.https() ในการจัดพารามิเตอร์ ส่วน dio สามารถส่งเป็น Map เข้าทางพารามิเตอร์ queryParameters ได้โดยตรง อ่านเข้าใจง่ายและจัดการตัวแปรง่ายกว่า   3.การจัดการ Exception: http ต้องแยกดักจับ Exception หลายชนิด เช่น TimeoutException, ClientException และ FormatException ในขณะที่ dio รวบรวมข้อผิดพลาดทั้งหมดไว้ที่ DioException คลาสเดียว แล้วใช้ DioExceptionType ในการระบุสาเหตุข้อผิดพลาดได้อย่างชัดเจน
 ```
 >
 > ✅ **Checkpoint 5.3** แสดงโค้ดเงื่อนไข `DioExceptionType` เพิ่มเติมที่เขียนเองในขั้นตอนที่ 5.4 
 
 ```text
-บันทึกคำตอบที่นี่
+} on DioException catch (e) {
+  if (e.type == DioExceptionType.connectionTimeout) {
+    throw Exception('การเชื่อมต่อหมดเวลา กรุณาลองใหม่อีกครั้ง');
+  } else if (e.type == DioExceptionType.badResponse) {
+    throw Exception('เซิร์ฟเวอร์ตอบกลับผิดพลาด (${e.response?.statusCode})');
+  } else if (e.type == DioExceptionType.receiveTimeout) {
+    throw Exception('การรับข้อมูลจากเซิร์ฟเวอร์นานเกินกำหนด');
+  } else if (e.type == DioExceptionType.connectionError) {
+    throw Exception('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต');
+  }
+  throw Exception('เกิดข้อผิดพลาด: ${e.message}');
+}
 ```
 ---
 
@@ -734,6 +747,7 @@ void main() {
 รันไฟล์นี้ด้วยวิธีเดียวกับขั้นตอนที่ 2.2 — กด **Run** ที่มุมขวาบนใน VS Code หรือรันจาก terminal ด้วยคำสั่ง `dart run lib/test_item_parse.dart`
 
 > ✅ **Checkpoint 7.1** ถ่ายภาพ Debug Console ที่ทดสอบ `Item.fromJson()` กับ JSON ตัวอย่างข้างต้นแล้ว print ค่าทั้ง 6 ฟิลด์ออกมาได้ถูกต้อง
+<img width="623" height="137" alt="image" src="https://github.com/user-attachments/assets/6f1d7951-6f59-490a-b7e5-c6f463b383ad" />
 
 ```text
 บันทึกรูปที่นี่
@@ -875,6 +889,7 @@ class _HomePageState extends State<HomePage> {
 ```text
 บันทึกรูปที่นี่
 ```
+<img width="1290" height="972" alt="image" src="https://github.com/user-attachments/assets/1a3cb301-1fb5-4c70-87b7-581ff689eceb" />
 
 ---
 
