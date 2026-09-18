@@ -76,18 +76,30 @@ https://api.openweathermap.org/data/2.5/weather?q=Bangkok&appid=YOUR_API_KEY&uni
 กด **Send** แล้วสังเกตผลลัพธ์สองส่วนคือ **Status Code** ที่แสดงมุมขวาบน และ **Response Body** ที่เป็น JSON ด้านล่าง
 
 > ✅ **Checkpoint 1.1** ถ่ายภาพหน้าจอ Postman ที่แสดง Status Code `200` พร้อม Response Body แบบเต็ม จากนั้นให้เขียนระบุใน ว่า key ใดใน JSON ที่คาดว่าจะต้องใช้แสดงผลในแอป (เช่น ชื่อเมือง, อุณหภูมิ, คำอธิบายสภาพอากาศ)
+<img width="1580" height="992" alt="image" src="https://github.com/user-attachments/assets/5bf4993f-c1fc-4f9a-be89-ced46c31b3a4" />
 
 ```text
-บันทึกรูปและคำตอบที่นี่
+ชื่อเมือง: name (ค่า: "กรุงเทพมหานคร")
+
+อุณหภูมิปัจจุบัน: main.temp (ค่า: 30.09)
+
+คำอธิบายสภาพอากาศ: weather[0].description (ค่า: "เมฆกระจาย")
+
+ไอคอนสภาพอากาศ: weather[0].icon (ค่า: "03d")
+
+อุณหภูมิที่รู้สึกจริง (Feels like): main.feels_like (ค่า: 36.82)
+
+ความชื้นสัมพัทธ์: main.humidity (ค่า: 76)
 ```
 ### ขั้นตอนที่ 1.2 — 🧠 คิดเอง/ออกแบบเอง
 
 ออกแบบการทดสอบกรณีผิดพลาด (error case) อย่างน้อย 1 กรณี โดยเปลี่ยนค่าพารามิเตอร์บางตัวใน Request ให้เป็นสิ่งที่คาดว่าจะทำให้เซิร์ฟเวอร์ตอบกลับด้วย error (ตัวอย่างแนวทางที่เลือกได้ เช่น เปลี่ยนชื่อเมืองเป็นชื่อที่ไม่มีอยู่จริง, ใส่ `appid` ผิด, หรือลบ `appid` ออกไปเลย) **ก่อนกด Send ให้เขียนคาดการณ์ ก่อนว่า นักศึกษาคิดว่า Status Code จะเป็นอะไร** แล้วจึงทดสอบจริงเพื่อเทียบกับที่คาดไว้
 
 > ✅ **Checkpoint 1.2** บันทึกด้านล่างว่านักศึกษาเลือกทดสอบกรณีใด คาดการณ์ Status Code ไว้ว่าอะไร และ Status Code จริงที่ได้คืออะไร (ตรงหรือไม่ตรงกับที่คาดไว้) พร้อมอธิบายว่าผลลัพธ์ที่ได้ตรงกับช่วง Status Code ใดตามตารางในบทเรียนหัวข้อ 6.3
+<img width="886" height="645" alt="image" src="https://github.com/user-attachments/assets/ac03de37-3bab-4944-9f84-5eb65ad4d39b" />
 
 ```text
-บันทึกรูปและคำตอบที่นี่
+คาดการณ์ Status Code: 401 Unauthorized ตรงกับที่คาดไว้ ผลลัพธ์ที่ได้จัดอยู่ในช่วง 4xx Client Error ซึ่งเป็นรหัสแจ้งเตือนข้อผิดพลาดที่เกิดจากฝั่งผู้ส่งคำขอ Client โดยเฉพาะรหัส 401 Unauthorized หมายถึงคำขอถูกปฏิเสธเนื่องจากขาดข้อมูลการยืนยันตัวตนที่ถูกต้อง Invalid/Missing API Key เซิร์ฟเวอร์จึงไม่สามารถอนุญาตให้ดึงข้อมูลได้ 
 ```
 ---
 
@@ -181,9 +193,10 @@ void main() {
 รันไฟล์นี้แยกจากแอปหลัก — ใน VS Code เปิดไฟล์นี้แล้วกด **Run** ที่มุมขวาบน (หรือคลิกขวา > Run) หรือรันจาก terminal ด้วยคำสั่ง `dart run lib/test_weather_parse.dart` เพราะไฟล์นี้มี `main()` ของตัวเอง จึงรันแยกจากแอป Flutter หลักได้ทันทีโดยไม่ต้องเปิดโปรแกรมทั้งแอป
 
 > ✅ **Checkpoint 2.1** รันไฟล์ทดสอบข้างต้น สังเกตค่าทั้ง 4 ฟิลด์ที่ `print()` ออกมาใน Debug Console ว่าตรงกับ Response Body จริงจาก Postman หรือไม่ ถ่ายภาพหน้าจอ Debug Console ที่แสดงว่าค่าทั้ง 4 ฟิลด์ถูกต้องตรงกับ JSON จริง
+<img width="555" height="137" alt="image" src="https://github.com/user-attachments/assets/b7a49cfc-5d6a-491c-89b0-e5cc0ff9406f" />
 
 ```text
-บันทึกรูปที่นี่
+ผลลัพธ์ที่ print() ออกมาใน Debug Console ตรงกับข้อมูล JSON จริงจาก Postman
 ```
 ### ขั้นตอนที่ 2.3 — 🧠 คิดเอง/ออกแบบเอง
 
@@ -231,9 +244,10 @@ class WeatherService {
 
 
 > ✅ **Checkpoint 2.2** บันทึกผลการตรวจสอบ `statusCode` อย่างน้อย 2 กรณี (สำเร็จ และ 404) ตามเกณฑ์ข้างต้น
+<img width="295" height="146" alt="image" src="https://github.com/user-attachments/assets/f58a5702-5a64-4921-a8fa-7a0f1492a0c0" />
 
 ```text
-บันทึกรูปและคำตอบที่นี่
+กรณีดึงข้อมูลสำเร็จ Status Code คือ 200 เมื่อระบุเมืองถูกต้องอย่าง Bangkok ระบบจะแปลง JSON เป็นวัตถุ Weather ได้เรียบร้อย ส่วนกรณีระบุเมืองไม่ถูกต้อง Status Code คือ 404 ระบบจะเข้าเงื่อนไขโยน Exception แจ้งเตือนว่าไม่พบข้อมูลเมืองที่ระบุ
 ```
 
 ### ขั้นตอนที่ 2.4 — 🧠 คิดเอง/ออกแบบเอง
@@ -350,6 +364,8 @@ class MyApp extends StatelessWidget {
 ```
 
 > ✅ **Checkpoint 2.3** รันแอปแล้วทดสอบทั้ง 3 สถานการณ์ คือ (1) ค้นหาเมืองที่มีจริง (2) ค้นหาเมืองที่ไม่มีอยู่จริง (3) ปิด Wi-Fi/Data บนเครื่องแล้วลองค้นหา ถ่ายภาพหน้าจอทั้ง 3 กรณี
+<img width="1280" height="391" alt="image" src="https://github.com/user-attachments/assets/1dfa84aa-7c22-41c0-b388-773baeadac7b" />
+<img width="1290" height="365" alt="image" src="https://github.com/user-attachments/assets/d6fd3dcf-36bd-45c1-995d-eaaabf4c5375" />
 
 ```text
 บันทึกรูปที่นี่
