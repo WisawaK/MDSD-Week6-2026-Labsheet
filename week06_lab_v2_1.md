@@ -417,12 +417,19 @@ ElevatedButton(
 ```
 
 จากนั้นรันแอป กดปุ่มนี้ แล้วดูผลลัพธ์ใน Debug Console (ปุ่มนี้เป็นแค่ปุ่มทดลองชั่วคราว ไม่ต้องมีการจัดการ Loading/Error ใด ๆ ต่างจากปุ่ม "ค้นหา" หลักของหน้า)
+<img width="377" height="212" alt="image" src="https://github.com/user-attachments/assets/f57802f6-96ad-483c-b85e-5414bcc9b0c7" />
 
 > ✅ **Checkpoint 3.1** ถ่ายภาพหน้าจอ Debug Console ที่แสดง Status Code (ควรเป็น `201 Created`) พร้อม Response Body 
 ```text
-บันทึกรูปและคำตอบที่นี่
+}
+Status Code: 201
+Response Body: {
+  "title": "ทดสอบส่งข้อมูลจาก Flutter",
+  "body": "นี่คือเนื้อหาที่ส่งด้วย HTTP POST",
+  "userId": 1,
+  "id": 101
+}
 ```
-
 ### ขั้นตอนที่ 3.2 — 🧠 คิดเอง/ออกแบบเอง
 
 เขียนฟังก์ชัน `updateDemoPost()` เพิ่มเติมด้วยตัวเอง โดยใช้ `createDemoPost()` ในขั้นตอนที่ 3.1 เป็นต้นแบบโครงสร้าง แต่เปลี่ยนให้เรียก HTTP Method **PUT** ไปยัง `https://jsonplaceholder.typicode.com/posts/1` พร้อม body ที่คุณกำหนดเนื้อหาให้มีชื่อนักศึกษา  โครงเริ่มต้นด้านล่างให้เฉพาะชื่อฟังก์ชันและ `Uri` เป็นตัวอย่าง ส่วนการเรียก `http.put()` พร้อม body และการ print ผลลัพธ์ให้เขียนต่อเอง
@@ -445,9 +452,16 @@ Future<void> updateDemoPost() async {
 ```
 
 > ✅ **Checkpoint 3.2** ถ่ายภาพหน้าจอ Debug Console ที่แสดง Status Code ของการเรียก PUT (ควรเป็น `200 OK`) 
+<img width="340" height="202" alt="image" src="https://github.com/user-attachments/assets/90aed5d5-bc60-4394-8f67-e37d2b82d3bf" />
 
 ```text
-บันทึกรูปและคำตอบที่นี่
+Status Code: 200
+Response Body: {
+  "id": 1,
+  "studentId": "67030215",
+  "studentName": "วิศวะ กำจร",
+  "title": "อัปเดตข้อมูลด้วย HTTP PUT"
+}
 ```
 ---
 
@@ -497,13 +511,19 @@ GET https://fakestoreapi.com/products
 ไม่ว่าจะเลือกแบบไหน เป้าหมายคือต้องเห็น **ผลลัพธ์จริงจาก Fake Store API** ปรากฏขึ้นมา  ถ้ารันแล้วเจอ error หรือโค้ดจาก Gemini ผิดพลาด (เช่น import ขาด, ชื่อ field ไม่ตรงกับ JSON จริง) ให้จดบันทึกข้อความ error และวิธีแก้ไขไว้ในด้านล่าง
 
 ```text
-บันทึก error และการแก้ไขที่นี่
+ไม่พบ Error หรือข้อผิดพลาดในการรัน โค้ดสามารถเชื่อมต่อและดึงข้อมูลจาก Fake Store API ได้สำเร็จ 100%
+
+รายละเอียดการตรวจสอบ:
+1. การ Import แพ็กเกจ: มีการ import 'dart:async', 'dart:convert' และ 'package:http/http.dart' ครบถ้วน
+2. โครงสร้าง JSON: ชื่อฟิลด์ในคลาส AiProduct (id, title, price, description, category, image) ตรงกับ Key ใน JSON ต้นทางทั้งหมด
+3. การแปลง Data Type: ฟิลด์ price ใช้ (json['price'] as num).toDouble() ทำให้รองรับทั้งจำนวนเต็มและทศนิยม โดยไม่เกิด Type Cast Error
 ```
 
 > ✅ **Checkpoint 4.2** ถ่ายภาพหน้าจอ Debug Console ที่แสดงผลลัพธ์จริงจากการเรียก `fetchAiProducts()` (เช่น รายการสินค้าที่ print ออกมา) 
 ```text
 บันทึกรูปที่นี่
 ```
+<img width="647" height="558" alt="image" src="https://github.com/user-attachments/assets/daaf8c14-0fae-4b9a-b550-58aa23f43efd" />
 
 ---
 
